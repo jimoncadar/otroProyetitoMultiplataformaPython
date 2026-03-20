@@ -44,7 +44,8 @@ tree.heading("puesto", text="Puesto")
 tree.heading("departamento", text="Departamento")
 tree.heading("salario", text="Salario")
 
-tree.column("id", width=10, stretch=False)
+tree.column("id", width=30, stretch=False)
+tree.column("codigo", width=40)
 """ tree.column("tamaño", width=110, anchor="e")
 tree.column("modificado", width=140, anchor="center")
 tree.column("tipo", width=110, anchor="w") """
