@@ -1,9 +1,26 @@
 import tkinter as tk
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+from conexion import MiConexion
+import mysql.connector
+from tkinter import messagebox
+
+
+def mostrarDatos():
+    try:
+        conn = MiConexion()
+        cursor = conn.cursor()
+        sql = "select * from empleados"
+        cursor.execute(conn, sql)
+        datos = cursor.fetchall()
+
+        for dato in datos:
+            pass 
+
+    except Exception as e:
+        messagebox.showerror("Error")
 
 """ Ventana """
-
 root = ttk.Window()
 root.title = "Proyectito"
 root.geometry("900x400")

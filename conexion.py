@@ -1,3 +1,16 @@
 import mysql.connector
-def Conexion():
-    pass
+
+def MiConexion():
+    Conexion = mysql.connector.connect(
+        user='root', 
+        password='',                              
+        host='127.0.0.1',
+        database='importadora_pepito'
+    )
+
+    return Conexion
+
+
+    
+
+
