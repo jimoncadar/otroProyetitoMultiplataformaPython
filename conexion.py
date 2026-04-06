@@ -6,7 +6,7 @@ def MiConexion():
         password='',                              
         host='127.0.0.1',
         database='importadora_pepito'
-    )
+    )    
 
     return Conexion
 

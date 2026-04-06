@@ -6,20 +6,6 @@ import mysql.connector
 from tkinter import messagebox
 
 
-def mostrarDatos():
-    try:
-        conn = MiConexion()
-        cursor = conn.cursor()
-        sql = "select * from empleados"
-        cursor.execute(conn, sql)
-        datos = cursor.fetchall()
-
-        for dato in datos:
-            pass 
-
-    except Exception as e:
-        messagebox.showerror("Error")
-
 """ Ventana """
 root = ttk.Window()
 root.title = "Proyectito"
@@ -34,7 +20,8 @@ ttk.Label(root, text="Código").place(x=30, y=90)
 txtCodigo = ttk.Entry(root).place(x=110, y=80, width=200)
 
 ttk.Label(root, text="Empleado:").place(x=30, y=130)
-txtEmpleado = ttk.Entry(root).place(x=110, y=120, width=200)
+txtEmpleado = ttk.Entry(root)
+txtEmpleado.place(x=110, y=120, width=200)
 
 ttk.Label(root, text="Puesto:").place(x=30, y=170)
 txtPuesto = ttk.Entry(root).place(x=110, y=160, width=200)
@@ -61,13 +48,32 @@ tree.heading("puesto", text="Puesto")
 tree.heading("departamento", text="Departamento")
 tree.heading("salario", text="Salario")
 
-tree.column("id", width=30, stretch=False)
-tree.column("codigo", width=20)
-tree.column("empleado", width=20)
-tree.column("puesto", width=20)
-tree.column("departamento", width=20)
-tree.column("salario", width=20)
+tree.column("id", width=30, stretch=False, anchor="center")
+tree.column("codigo", width=20, anchor="center")
+tree.column("empleado", width=20, anchor="center")
+tree.column("puesto", width=20, anchor="center")
+tree.column("departamento", width=20, anchor="center")
+tree.column("salario", width=20, anchor="center")
 
 
+btnInsertar = ttk.Button(root, text="Insertar")
+btnInsertar.place(x=400, y=40, width=150, height=90)
+
+def mostrarDatos():
+    try:
+        conn = MiConexion()        
+        cursor = conn.cursor()
+        sql = "select * from empleados"
+        cursor.execute(sql, conn)
+        datos = cursor.fetchall()
+
+        for dato in datos:
+            tree.insert("", tk.END, values=dato)
+                    
+    except mysql.connector.Error as e:
+        messagebox.showerror(f"Error:{e}")
+
+
+mostrarDatos()    
 
 root.mainloop()
