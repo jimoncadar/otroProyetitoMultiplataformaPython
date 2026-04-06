@@ -17,20 +17,24 @@ ttk.Label(root, text="ID:").place(x=30, y=50)
 txtID = ttk.Entry(root, state=READONLY).place(x=110, y=40, width=200)
 
 ttk.Label(root, text="Código").place(x=30, y=90)
-txtCodigo = ttk.Entry(root).place(x=110, y=80, width=200)
+txtCodigo = ttk.Entry(root)
+txtCodigo.place(x=110, y=80, width=200)
 
 ttk.Label(root, text="Empleado:").place(x=30, y=130)
 txtEmpleado = ttk.Entry(root)
 txtEmpleado.place(x=110, y=120, width=200)
 
 ttk.Label(root, text="Puesto:").place(x=30, y=170)
-txtPuesto = ttk.Entry(root).place(x=110, y=160, width=200)
+txtPuesto = ttk.Entry(root)
+txtPuesto.place(x=110, y=160, width=200)
 
 ttk.Label(root, text="Departamento:").place(x=30, y=210)
-txtDepartamento = ttk.Entry(root).place(x=140, y=200, width=170)
+txtDepartamento = ttk.Entry(root)
+txtDepartamento.place(x=140, y=200, width=170)
 
 ttk.Label(root, text="Salario:").place(x=30, y=250)
-txtSalario = ttk.Entry(root).place(x=110, y=240, width=200)
+txtSalario = ttk.Entry(root)
+txtSalario.place(x=110, y=240, width=200)
 
 tree = ttk.Treeview(
     root,
@@ -38,7 +42,7 @@ tree = ttk.Treeview(
     # displaycolumns="#all",
     height=22,
     selectmode="extended",
-    show="headings"    
+    show="headings",        
 )
 tree.place(x=30, y=280, width=850, height=100)
 tree.heading("id", text="ID")
@@ -55,11 +59,17 @@ tree.column("puesto", width=20, anchor="center")
 tree.column("departamento", width=20, anchor="center")
 tree.column("salario", width=20, anchor="center")
 
+scroll_y = ttk.Scrollbar(tree, orient="vertical")
+scroll_y.pack(side="right", fill="y")
 
-btnInsertar = ttk.Button(root, text="Insertar")
-btnInsertar.place(x=400, y=40, width=150, height=90)
 
-def mostrarDatos():
+btnModificar = ttk.Button(root, text="Modificar", bootstyle="warning")
+btnModificar.place(x=560, y=40, width=150, height=90)
+
+btnEliminar = ttk.Button(root, text="Eliminar", bootstyle="danger")
+btnEliminar.place(x=720, y=40, width=150, height=90)
+
+def mostrarDatos():    
     try:
         conn = MiConexion()        
         cursor = conn.cursor()
@@ -75,5 +85,36 @@ def mostrarDatos():
 
 
 mostrarDatos()    
+
+
+def insertarDatos():
+    codigo = txtCodigo.get()
+    empleado = txtEmpleado.get()
+    puesto = txtPuesto.get()
+    departamento = txtDepartamento.get()
+    salario = txtSalario.get()
+
+    if codigo == "" or empleado == "" or puesto == "" or departamento == "" or salario == "":
+        messagebox.showwarning("Aviso", "Ingresar todos los datos del formulario.")
+        return
+    
+    try:
+        con = MiConexion()
+        cursor = con.cursor()
+        sql_insertar = "insert into empleados(codigo, nombre, puesto, departamento, salario) values(%s,%s,%s,%s,%s)"
+        valores = (codigo, empleado, puesto, departamento, salario)
+
+        cursor.execute(sql_insertar, valores)
+        con.commit()
+        con.close()
+
+        mostrarDatos()    
+        messagebox.showinfo("Registro", "Registro éxitoso.")
+
+    except Exception as e:
+        messagebox.showerror("Error", "Problemas.")
+
+btnInsertar = ttk.Button(root, text="Insertar", command=insertarDatos)
+btnInsertar.place(x=400, y=40, width=150, height=90)
 
 root.mainloop()
