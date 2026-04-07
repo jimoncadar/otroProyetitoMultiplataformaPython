@@ -9,12 +9,13 @@ from tkinter import messagebox
 """ Ventana """
 root = ttk.Window()
 root.title = "Proyectito"
-root.geometry("900x400")
+root.geometry("900x500")
 
 ttk.Label(root, text="Empleado", font=('Sans Serif', 14)).place(x=150, y=5)
 
 ttk.Label(root, text="ID:").place(x=30, y=50)
-txtID = ttk.Entry(root, state=READONLY).place(x=110, y=40, width=200)
+txtID = ttk.Entry(root, state=READONLY)
+txtID.place(x=110, y=40, width=200)
 
 ttk.Label(root, text="Código").place(x=30, y=90)
 txtCodigo = ttk.Entry(root)
@@ -44,7 +45,7 @@ tree = ttk.Treeview(
     selectmode="extended",
     show="headings",        
 )
-tree.place(x=30, y=280, width=850, height=100)
+tree.place(x=30, y=280, width=850, height=200)
 tree.heading("id", text="ID")
 tree.heading("codigo", text="Código")
 tree.heading("empleado", text="Empleado")
@@ -69,7 +70,10 @@ btnModificar.place(x=560, y=40, width=150, height=90)
 btnEliminar = ttk.Button(root, text="Eliminar", bootstyle="danger")
 btnEliminar.place(x=720, y=40, width=150, height=90)
 
-def mostrarDatos():    
+def mostrarDatos():
+    for filas in tree.get_children():
+        tree.delete(filas)
+
     try:
         conn = MiConexion()        
         cursor = conn.cursor()
@@ -108,13 +112,25 @@ def insertarDatos():
         con.commit()
         con.close()
 
-        mostrarDatos()    
+        mostrarDatos() 
+        limpiarCampos()   
         messagebox.showinfo("Registro", "Registro éxitoso.")
 
     except Exception as e:
-        messagebox.showerror("Error", "Problemas.")
+        messagebox.showerror("Error", f"Problemas:{e}")
 
 btnInsertar = ttk.Button(root, text="Insertar", command=insertarDatos)
 btnInsertar.place(x=400, y=40, width=150, height=90)
+
+def limpiarCampos():
+    txtID.delete(0, tk.END)
+    txtCodigo.delete(0, tk.END)
+    txtDepartamento.delete(0, tk.END)
+    txtEmpleado.delete(0, tk.END)
+    txtPuesto.delete(0, tk.END)
+    txtSalario.delete(0, tk.END)  
+    
+btnLimpiar = ttk.Button(root, text="Limpiar", command=limpiarCampos)
+btnLimpiar.place(x=400, y=150, width=150, height=90)
 
 root.mainloop()
