@@ -14,7 +14,7 @@ root.geometry("900x500")
 ttk.Label(root, text="Empleado", font=('Sans Serif', 14)).place(x=150, y=5)
 
 ttk.Label(root, text="ID:").place(x=30, y=50)
-txtID = ttk.Entry(root, state=READONLY)
+txtID = ttk.Entry(root)
 txtID.place(x=110, y=40, width=200)
 
 ttk.Label(root, text="Código").place(x=30, y=90)
@@ -132,5 +132,33 @@ def limpiarCampos():
     
 btnLimpiar = ttk.Button(root, text="Limpiar", command=limpiarCampos)
 btnLimpiar.place(x=400, y=150, width=150, height=90)
+
+
+def seleccionar(event):
+    item = tree.focus()
+    if item:
+        datos = tree.item(item, "values")
+
+        txtID.delete(0, tk.END)
+        txtID.insert(0, datos[0])
+
+        txtCodigo.delete(0, tk.END)
+        txtCodigo.insert(0, datos[1])
+
+        txtEmpleado.delete(0, tk.END)
+        txtEmpleado.insert(0, datos[2])
+
+        txtPuesto.delete(0, tk.END)
+        txtPuesto.insert(0, datos[3])
+        
+        txtDepartamento.delete(0, tk.END)
+        txtDepartamento.insert(0, datos[4])
+        
+        txtSalario.delete(0, tk.END)
+        txtSalario.insert(0, datos[5])
+
+
+
+tree.bind("<Button-1>", seleccionar)
 
 root.mainloop()
