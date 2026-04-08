@@ -64,10 +64,6 @@ scroll_y = ttk.Scrollbar(tree, orient="vertical")
 scroll_y.pack(side="right", fill="y")
 
 
-btnModificar = ttk.Button(root, text="Modificar", bootstyle="warning")
-btnModificar.place(x=560, y=40, width=150, height=90)
-
-
 
 def mostrarDatos():
     for filas in tree.get_children():
@@ -168,25 +164,54 @@ def eliminar():
         return
     
     respuesta = messagebox.askyesno("Consulta", "¿Desea eliminar el registro?")
-    if respuesta:
-        
-        sql_eliminar = "delete from empleados where id = %s"        
-        valor = (id_Empleado, )
+    if respuesta:        
+        try:
+            sql_eliminar = "delete from empleados where id = %s"        
+            valor = (id_Empleado, )
 
-        con = MiConexion()        
-        cursor = con.cursor()
-        cursor.execute(sql_eliminar, valor)        
-        con.commit()
-        con.close()
+            con = MiConexion()        
+            cursor = con.cursor()
+            cursor.execute(sql_eliminar, valor)        
+            con.commit()
+            con.close()
 
-        messagebox.showinfo("Aviso", "Registro eliminado.")
-        mostrarDatos()
-        limpiarCampos()
+            messagebox.showinfo("Aviso", "Registro eliminado.")
+            mostrarDatos()
+            limpiarCampos()
+        except Exception as e:
+            messagebox.showerror("Aviso", f"Error:{e}")
 
 
 btnEliminar = ttk.Button(root, text="Eliminar", bootstyle="danger", command=eliminar)
 btnEliminar.place(x=720, y=40, width=150, height=90)
 
+def modificar():
+    id = txtID.get()
+    codigo = txtCodigo.get()
+    empleado = txtEmpleado.get()
+    puesto = txtPuesto.get()
+    departamento = txtDepartamento.get()
+    salario = txtSalario.get()
 
+    if id == "":
+        messagebox.showwarning("Aviso", "Seleccionar un registro para editar.")
+        return
+    
+    try:
+        con = MiConexion()
+        cursor = con.cursor()
+        sql_editar = "update empleados set codigo = %s, nombre = %s, puesto = %s, departamento = %s, salario = %s where id = %s"
+        valores = (codigo, empleado, puesto, departamento, salario, id)
+        cursor.execute(sql_editar, valores)
+        con.commit()
+        mostrarDatos()
+        limpiarCampos()
+        messagebox.showinfo("Aviso", "Registro modificado")
+
+    except Exception as e:
+        messagebox.showerror("Aviso", f"Error:{e}")
+
+btnModificar = ttk.Button(root, text="Modificar", bootstyle="warning", command=modificar)
+btnModificar.place(x=560, y=40, width=150, height=90)
 
 root.mainloop()
