@@ -67,8 +67,7 @@ scroll_y.pack(side="right", fill="y")
 btnModificar = ttk.Button(root, text="Modificar", bootstyle="warning")
 btnModificar.place(x=560, y=40, width=150, height=90)
 
-btnEliminar = ttk.Button(root, text="Eliminar", bootstyle="danger")
-btnEliminar.place(x=720, y=40, width=150, height=90)
+
 
 def mostrarDatos():
     for filas in tree.get_children():
@@ -130,7 +129,7 @@ def limpiarCampos():
     txtPuesto.delete(0, tk.END)
     txtSalario.delete(0, tk.END)  
     
-btnLimpiar = ttk.Button(root, text="Limpiar", command=limpiarCampos)
+btnLimpiar = ttk.Button(root, text="Limpiar", bootstyle="secondary", command=limpiarCampos)
 btnLimpiar.place(x=400, y=150, width=150, height=90)
 
 
@@ -160,5 +159,34 @@ def seleccionar(event):
 
 
 tree.bind("<Button-1>", seleccionar)
+
+def eliminar():
+    id_Empleado = txtID.get()
+
+    if id_Empleado == "":
+        messagebox.showwarning("Aviso", "Seleccione un empleado para eliminar.")
+        return
+    
+    respuesta = messagebox.askyesno("Consulta", "¿Desea eliminar el registro?")
+    if respuesta:
+        
+        sql_eliminar = "delete from empleados where id = %s"        
+        valor = (id_Empleado, )
+
+        con = MiConexion()        
+        cursor = con.cursor()
+        cursor.execute(sql_eliminar, valor)        
+        con.commit()
+        con.close()
+
+        messagebox.showinfo("Aviso", "Registro eliminado.")
+        mostrarDatos()
+        limpiarCampos()
+
+
+btnEliminar = ttk.Button(root, text="Eliminar", bootstyle="danger", command=eliminar)
+btnEliminar.place(x=720, y=40, width=150, height=90)
+
+
 
 root.mainloop()
